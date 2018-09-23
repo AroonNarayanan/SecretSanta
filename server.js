@@ -29,7 +29,7 @@ app.route('/registerFamily').post((req, res) => {
                 promiseArray.push(saveSanta(santa));
             });
             Promise.all(promiseArray).then(resultArray => {
-                res.json(resultArray);
+                res.json(removeGiftees(resultArray, req.query.hideGiftees));
             }).catch(err => {
                 res.status(500).send(err);
             })
@@ -43,7 +43,7 @@ app.route('/family').get((req, res) => {
     if (req.query.passphrase && req.query.passphrase === process.env.PASSPHRASE) {
         Santa.find({}, (err, results) => {
             if (err) res.send(err); else {
-                res.json(results);
+                res.json(removeGiftees(results, req.query.hideGiftees));
             }
         });
     } else res.sendStatus(401);
@@ -70,4 +70,13 @@ function saveSanta(santa) {
             if (err) reject(); else resolve(result);
         });
     });
+}
+
+function removeGiftees(array, performRemoval) {
+    return performRemoval ? array.map(item => {
+        return {
+            name: item.name,
+            pin: item.pin
+        }
+    }) : array;
 }
