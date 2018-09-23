@@ -4,7 +4,8 @@
   "description": "Secret Santa app developed for the Narayanan family",
   "main": "server.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "start-local": "PASSPHRASE=1234 node server.js"
   },
   "author": "Aroon Narayanan",
   "license": "ISC",

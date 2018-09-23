@@ -73,7 +73,7 @@ function saveSanta(santa) {
 }
 
 function removeGiftees(array, performRemoval) {
-    return performRemoval ? array.map(item => {
+    return performRemoval === 'true' ? array.map(item => {
         return {
             name: item.name,
             pin: item.pin
