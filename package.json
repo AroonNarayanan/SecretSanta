@@ -7,6 +7,9 @@
     "test": "mocha",
     "start-local": "PASSPHRASE=1234 node server.js"
   },
+  "engines": {
+    "node": "~8.11.0"
+  },
   "author": "Aroon Narayanan",
   "license": "ISC",
   "dependencies": {
