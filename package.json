@@ -1,0 +1,16 @@
+{
+  "name": "secretsantaserver",
+  "version": "0.1.0",
+  "description": "Secret Santa app developed for the Narayanan family",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Aroon Narayanan",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "mongoose": "^5.2.17"
+  }
+}
