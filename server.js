@@ -13,6 +13,7 @@ mongoose.connect('mongodb://rudolph:9reindeer@ds045087.mlab.com:45087/secretsant
 
 app.route('/registerFamily').post((req, res) => {
     if (req.body.family) {
+        //TODO: check for existing familyIds
         const familyId = Math.floor(Math.random() * 100000).toString();
         const familyNames = req.body.family;
         Shuffle(familyNames);
@@ -51,6 +52,8 @@ app.route('/family').get((req, res) => {
             }
         });
     } else res.sendStatus(400);
+}).delete((req, res) => {
+
 });
 
 app.route('/getSanta/:name').get((req, res) => {
@@ -74,7 +77,7 @@ app.listen(port, () => {
 function saveSanta(santa) {
     return new Promise((resolve, reject) => {
         santa.save((err, result) => {
-            if (err) reject(); else resolve(result);
+            if (err) reject(err); else resolve(result);
         });
     });
 }

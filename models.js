@@ -5,7 +5,7 @@ const santaSchema = new mongoose.Schema({
     pin: String,
     familyId: String,
     giftee: String,
-    budget: Number
+    budget: String
     // gifteeInterests: String
 });
 
