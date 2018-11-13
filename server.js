@@ -61,7 +61,7 @@ app.route('/getSanta/:name').get((req, res) => {
         else if (!result) res.sendStatus(401);
         else res.json({
                 name: result.giftee,
-                budget: result.budget
+                budget: result.budget ? result.budget : 'unknown'
             });
     });
 });
