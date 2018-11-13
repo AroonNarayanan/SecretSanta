@@ -12,41 +12,45 @@ app.use(bodyParser.urlencoded({extended: false}));
 mongoose.connect('mongodb://rudolph:9reindeer@ds045087.mlab.com:45087/secretsanta');
 
 app.route('/registerFamily').post((req, res) => {
-    if (req.body.family && req.body.passphrase && req.body.passphrase === process.env.PASSPHRASE) {
+    if (req.body.family) {
+        const familyId = Math.floor(Math.random() * 100000).toString();
         const familyNames = req.body.family;
-        Santa.remove({}, () => {
-            Shuffle(familyNames);
-            const family = familyNames.map(name => {
-                return {
-                    name: name,
-                    pin: Math.floor(Math.random() * 100000).toString()
-                };
+        Shuffle(familyNames);
+        const family = familyNames.map(name => {
+            return {
+                name: name,
+                pin: Math.floor(Math.random() * 100000).toString(),
+                familyId: familyId,
+                budget: req.body.budget
+            };
+        });
+        const promiseArray = [];
+        family.forEach((member, i) => {
+            member.giftee = family[(i + 1) % family.length].name;
+            const santa = new Santa(member);
+            promiseArray.push(saveSanta(santa));
+        });
+        Promise.all(promiseArray).then(resultArray => {
+            res.json({
+                members: removeGiftees(resultArray, req.query.hideGiftees),
+                id: familyId
             });
-            const promiseArray = [];
-            family.forEach((member, i) => {
-                member.giftee = family[(i + 1) % family.length].name;
-                const santa = new Santa(member);
-                promiseArray.push(saveSanta(santa));
-            });
-            Promise.all(promiseArray).then(resultArray => {
-                res.json(removeGiftees(resultArray, req.query.hideGiftees));
-            }).catch(err => {
-                res.status(500).send(err);
-            })
+        }).catch(err => {
+            res.status(500).send(err);
         });
     } else {
-        res.sendStatus(401);
+        res.sendStatus(400);
     }
 });
 
 app.route('/family').get((req, res) => {
-    if (req.query.passphrase && req.query.passphrase === process.env.PASSPHRASE) {
-        Santa.find({}, (err, results) => {
+    if (req.query.familyId) {
+        Santa.find({familyId: req.query.familyId}, (err, results) => {
             if (err) res.send(err); else {
                 res.json(removeGiftees(results, req.query.hideGiftees));
             }
         });
-    } else res.sendStatus(401);
+    } else res.sendStatus(400);
 });
 
 app.route('/getSanta/:name').get((req, res) => {
