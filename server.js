@@ -69,6 +69,10 @@ app.route('/getSanta/:name').get((req, res) => {
     });
 });
 
+app.route('/policy').get((req, res) => {
+    res.send('This app will not share any of your data - any information stored will be used only for the purposes of fulfilling the app\'s services.');
+});
+
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
     console.log('App is listening on port ' + port);
