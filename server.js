@@ -59,7 +59,10 @@ app.route('/getSanta/:name').get((req, res) => {
     Santa.findOne({name: santa, pin: pin}, (err, result) => {
         if (err) res.send(err);
         else if (!result) res.sendStatus(401);
-        else res.send(result.giftee);
+        else res.json({
+                name: result.giftee,
+                budget: result.budget
+            });
     });
 });
 
