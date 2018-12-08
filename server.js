@@ -9,7 +9,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-mongoose.connect('mongodb://rudolph:9reindeer@ds045087.mlab.com:45087/secretsanta');
+mongoose.connect(process.env.MONGO_URL);
 
 app.route('/registerFamily').post((req, res) => {
     if (req.body.family) {
@@ -71,6 +71,10 @@ app.route('/getSanta/:name').get((req, res) => {
 
 app.route('/policy').get((req, res) => {
     res.send('This app will not share any of your data - any information stored will be used only for the purposes of fulfilling the app\'s services.');
+});
+
+app.route('/app').get((req, res) => {
+    res.redirect('http://onelink.to/3ncjk8');
 });
 
 const port = process.env.PORT || 8080;
