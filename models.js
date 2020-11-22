@@ -25,6 +25,7 @@ module.exports.Family = mongoose.model('Family', familySchema);
 
 const familyMemberSchema = new mongoose.Schema({
     name: String,
+    name_query: {type: String, lowercase: true, trim: true},
     pin: String,
     giftee: {
         type: mongoose.Schema.Types.ObjectId,
