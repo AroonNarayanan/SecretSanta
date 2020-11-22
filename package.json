@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha",
-    "start-local": "PASSPHRASE=1234 node server.js"
+    "start-local": "NODE_ENV=local node server.js"
   },
   "engines": {
     "node": "~8.11.0",

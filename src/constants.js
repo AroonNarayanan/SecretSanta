@@ -1,0 +1,1 @@
+module.exports.DB_URL = process.env.NODE_ENV === 'production' ? `` : 'mongodb://localhost:27017';
