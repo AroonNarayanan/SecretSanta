@@ -1,1 +1,1 @@
-module.exports.DB_URL = process.env.NODE_ENV === 'production' ? `` : 'mongodb://localhost:27017';
+module.exports.DB_URL = process.env.NODE_ENV === 'production' ? `mongodb+srv://app:${process.env.DB_PWD}@secretsanta.h6jnm.mongodb.net/secretsanta?retryWrites=true&w=majority` : 'mongodb://localhost:27017';
