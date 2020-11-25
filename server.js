@@ -1,3 +1,6 @@
+const {generateFamilyId, generatePin} = require('./src/utils');
+const v2routes = require('./src/routes');
+const {DB_URL} = require('./src/constants');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -9,18 +12,18 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-mongoose.connect(process.env.MONGO_URL);
+mongoose.connect(DB_URL, {useNewUrlParser: true});
 
 app.route('/registerFamily').post((req, res) => {
     if (req.body.family) {
         //TODO: check for existing familyIds
-        const familyId = Math.floor(Math.random() * 100000).toString();
+        const familyId = generateFamilyId();
         const familyNames = req.body.family;
         Shuffle(familyNames);
         const family = familyNames.map(name => {
             return {
                 name: name,
-                pin: Math.floor(Math.random() * 100000).toString(),
+                pin: generatePin(),
                 familyId: familyId,
                 budget: req.body.budget
             };
@@ -76,6 +79,8 @@ app.route('/policy').get((req, res) => {
 app.route('/app').get((req, res) => {
     res.redirect('http://onelink.to/3ncjk8');
 });
+
+app.use('/v2', v2routes);
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
