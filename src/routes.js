@@ -1,4 +1,6 @@
+const {isLegacyPin} = require('./utils');
 const {registerFamily, findFamily, findFamilyMember} = require('./family');
+const {Santa} = require('../models');
 const router = require('express').Router();
 
 router.route('/family')
@@ -32,6 +34,43 @@ router.route('/member/:name').get(async (req, res) => {
         } catch (e) {
             console.error(e);
             res.status(500).send(e);
+        }
+    } else res.sendStatus(400);
+});
+
+router.get('/unified/:name', async (req, res) => {
+    if (req.query.pin) {
+        if (isLegacyPin(req.query.pin)) {
+            console.log('LEGACYREQUEST');
+            Santa.findOne({name: req.params.name, pin: req.query.pin}, (err, result) => {
+                if (err) res.send(err);
+                else if (!result) res.sendStatus(404);
+                else res.json({
+                        name: req.params.name,
+                        interests: '',
+                        giftee: {
+                            name: result.giftee,
+                            interests: ''
+                        },
+                        family: {
+                            budget: result.budget ? result.budget : 'unknown',
+                            due: null
+                        },
+                        legacy: true
+                    });
+            });
+        } else {
+            try {
+                const familyMember = await findFamilyMember(req.params.name, req.query.pin)
+                if (familyMember) {
+                    res.json(familyMember);
+                } else {
+                    res.sendStatus(404);
+                }
+            } catch (e) {
+                console.error(e);
+                res.status(500).send(e);
+            }
         }
     } else res.sendStatus(400);
 });
