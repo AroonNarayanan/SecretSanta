@@ -6,7 +6,6 @@ const santaSchema = new mongoose.Schema({
     familyId: String,
     giftee: String,
     budget: String
-    // gifteeInterests: String
 });
 
 module.exports.Santa = mongoose.model('Santa', santaSchema);
