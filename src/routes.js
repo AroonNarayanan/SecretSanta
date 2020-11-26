@@ -38,10 +38,10 @@ router.route('/member/:name').get(async (req, res) => {
     } else res.sendStatus(400);
 });
 
-router.get('/unified/:name', async (req, res) => {
+router.get('/unified/member/:name', async (req, res) => {
     if (req.query.pin) {
         if (isLegacyPin(req.query.pin)) {
-            console.log('LEGACYREQUEST');
+            console.log('LEGACYREQUEST', 'MEMBER');
             Santa.findOne({name: req.params.name, pin: req.query.pin}, (err, result) => {
                 if (err) res.send(err);
                 else if (!result) res.sendStatus(404);
@@ -61,7 +61,7 @@ router.get('/unified/:name', async (req, res) => {
             });
         } else {
             try {
-                const familyMember = await findFamilyMember(req.params.name, req.query.pin)
+                const familyMember = await findFamilyMember(req.params.name, req.query.pin);
                 if (familyMember) {
                     res.json(familyMember);
                 } else {
@@ -74,5 +74,35 @@ router.get('/unified/:name', async (req, res) => {
         }
     } else res.sendStatus(400);
 });
+
+router.get('/unified/family', async (req, res) => {
+        if (req.query.familyId) {
+            if (isLegacyPin(req.query.familyId)) {
+                console.log('LEGACYREQUEST', 'FAMILY');
+                Santa.find({familyId: req.query.familyId}, (err, results) => {
+                    if (err) res.status(500).send(err); else {
+                        res.json({
+                            legacy: true,
+                            members: results
+                        });
+                    }
+                });
+            } else {
+                try {
+                    const family = await findFamily(req.query.familyId)
+                    if (family) {
+                        res.json(family);
+                    } else {
+                        res.sendStatus(404);
+                    }
+                } catch (e) {
+                    console.error(e);
+                    res.status(500).send(e);
+                }
+            }
+        } else
+            res.sendStatus(400);
+    }
+);
 
 module.exports = router;
