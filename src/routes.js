@@ -15,9 +15,9 @@ router.route('/family')
         } else res.sendStatus(400);
     })
     .post(async (req, res) => {
-        if (req.body.family && req.body.budget && req.body.due) {
+        if (req.body.members && req.body.budget && req.body.due) {
             try {
-                res.json(await registerFamily(req.body.family, req.body.budget, req.body.due));
+                res.json(await registerFamily(req.body.members, req.body.budget, req.body.due));
             } catch (e) {
                 console.error(e);
                 res.status(500).send(e);
